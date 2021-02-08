@@ -1,6 +1,8 @@
 /.metadata/
 .classpath
 /Comet Colour/bin/
+/Take 2/bin/
 .project
 *.prefs
 *.png
+*.txt
