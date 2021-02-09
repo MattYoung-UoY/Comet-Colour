@@ -25,9 +25,7 @@ public enum Colours {
 	T("4286050/3005", 238, 149, 197);
 
 	private final String name;
-	private final int r;
-	private final int g;
-	private final int b;
+	private final int r, g, b;
 
 	Colours(String name, int r, int g, int b) {
 		this.name = name;
