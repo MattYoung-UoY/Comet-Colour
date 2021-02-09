@@ -157,12 +157,12 @@ public class Main {
 		HashMap<Color, Integer> clustering = new HashMap<>();
 		final float DIFF = 0.15f;
 
-		for (int[][] pixel : pixels) {
+		for (int[][] column : pixels) {
 			for (int row = 0; row < pixels[0].length; row++) {
 
-				float r = pixel[row][0] / (float) 255;
-				float g = pixel[row][1] / (float) 255;
-				float b = pixel[row][2] / (float) 255;
+				float r = column[row][0] / (float) 255;
+				float g = column[row][1] / (float) 255;
+				float b = column[row][2] / (float) 255;
 
 				if (clustering.isEmpty()) {
 					clustering.put(new Color(r, g, b), 1);
