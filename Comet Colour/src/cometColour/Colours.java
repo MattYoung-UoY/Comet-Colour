@@ -22,13 +22,12 @@ public enum Colours {
 	Q("4113915/3005", 177, 161, 110),
 	R("4211242/3005", 84, 42, 20),
 	S("300526/3005", 47, 47, 47),
-	T("4286050/3005", 238, 149, 197)
-	;
-	
-	private String name;
-	private int r, g, b;
-	
-	private Colours(String name, int r, int g, int b) {
+	T("4286050/3005", 238, 149, 197);
+
+	private final String name;
+	private final int r, g, b;
+
+	Colours(String name, int r, int g, int b) {
 		this.name = name;
 		this.r = r;
 		this.g = g;
@@ -50,5 +49,5 @@ public enum Colours {
 	public int getB() {
 		return b;
 	}
-	
+
 }
