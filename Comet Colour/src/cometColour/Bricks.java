@@ -1,7 +1,7 @@
 package cometColour;
 
 
-public enum Colours {
+public enum Bricks {
 
 	A("4619652/3005", 96, 160, 185),
 	B("4541376/3005", 132, 48, 63),
@@ -27,7 +27,7 @@ public enum Colours {
 	private final String name;
 	private final int r, g, b;
 
-	Colours(String name, int r, int g, int b) {
+	Bricks(String name, int r, int g, int b) {
 		this.name = name;
 		this.r = r;
 		this.g = g;

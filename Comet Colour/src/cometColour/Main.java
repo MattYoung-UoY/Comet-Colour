@@ -5,10 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -16,6 +13,11 @@ import javax.imageio.ImageIO;
 public class Main {
 
 	public static void main(String[] args) {
+		
+		/*	pixels[x][y][0] -> (x,y) R val
+		 *  pixels[x][y][1] -> (x,y) G val
+		 *  pixels[x][y][2] -> (x,y) B val
+		 */
 		int[][][] pixels = loadImageFromFile("res/comet.png");
 		int[][][] bricks = basicBrickPicking(pixels);
 		writeImage(pixelsToImage(bricks), "res/output.png");
@@ -31,22 +33,22 @@ public class Main {
 		for (int i = 0; i < pixels.length; i++) {
 			for (int j = 0; j < pixels[0].length; j++) {
 
-				String colour = "";
+				String brickName = "";
 
-				for (Colours col : Colours.values()) {
-					if (col.getR() == pixels[i][j][0] && col.getG() == pixels[i][j][1] && col.getB() == pixels[i][j][2]) {
-						colour = col.getName();
+				for (Bricks brick : Bricks.values()) {
+					if (brick.getR() == pixels[i][j][0] && brick.getG() == pixels[i][j][1] && brick.getB() == pixels[i][j][2]) {
+						brickName = brick.getName();
 						break;
 					}
 				}
 
-				if (colour.equals(""))
+				if (brickName.equals(""))
 					throw new IllegalArgumentException("Pixel (" + i + ", " + j + ") is not in the colour set!");
 
-				if (bom.containsKey(colour))
-					bom.put(colour, bom.get(colour) + 1);
+				if (bom.containsKey(brickName))
+					bom.put(brickName, bom.get(brickName) + 1);
 				else
-					bom.put(colour, 1);
+					bom.put(brickName, 1);
 			}
 		}
 
@@ -54,9 +56,9 @@ public class Main {
 
 		int total = 0;
 
-		for (String colour : bom.keySet()) {
-			total += bom.get(colour);
-			outStr.append(colour).append(": ").append(bom.get(colour)).append("pcs\n");
+		for (String brick : bom.keySet()) {
+			total += bom.get(brick);
+			outStr.append(brick).append(": ").append(bom.get(brick)).append("pcs\n");
 		}
 
 		outStr.append("Total: ").append(total).append("pcs");
@@ -77,11 +79,7 @@ public class Main {
 		int diffG = c1.getGreen() - c2.getGreen();
 		int diffB = c1.getBlue() - c2.getBlue();
 
-		int diff2A = Math.abs(diffR - diffG);
-		int diff2B = Math.abs(diffG - diffB);
-		int diff2C = Math.abs(diffB - diffR);
-
-		return diff2A + diff2B + diff2C;
+		return Math.abs(diffR - diffG) + Math.abs(diffG - diffB) + Math.abs(diffB - diffR);
 	}
 
 	private static int[][][] basicBrickPicking(int[][][] pixels) {
@@ -122,23 +120,20 @@ public class Main {
 				g = Math.round(g);
 				b = Math.round(b);
 
-				Colours closest = null;
+				Bricks closest = null;
 
-				for (Colours col : Colours.values()) {
+				for (Bricks brick : Bricks.values()) {
 					if (closest == null) {
-						closest = col;
+						closest = brick;
 						continue;
 					}
 
 					Color c = new Color((int) r, (int) g, (int) b);
-					int diffCol = colDiff(c, new Color(col.getR(), col.getG(), col.getB()));
+					int diffCol = colDiff(c, new Color(brick.getR(), brick.getG(), brick.getB()));
 					int diffClosest = colDiff(c, new Color(closest.getR(), closest.getG(), closest.getB()));
 
-					float difCol = Math.abs(r - col.getR()) + Math.abs(g - col.getG()) + Math.abs(b - col.getB());
-					float difClosest = Math.abs(r - closest.getR()) + Math.abs(g - closest.getG()) + Math.abs(b - closest.getB());
-
 					if (diffCol < diffClosest) {
-						closest = col;
+						closest = brick;
 					}
 
 				}
@@ -153,51 +148,6 @@ public class Main {
 		return bricks;
 	}
 
-	private static List<Color> getBackgrounds(int[][][] pixels) {
-		HashMap<Color, Integer> clustering = new HashMap<>();
-		final float DIFF = 0.15f;
-
-		for (int[][] column : pixels) {
-			for (int row = 0; row < pixels[0].length; row++) {
-
-				float r = column[row][0] / (float) 255;
-				float g = column[row][1] / (float) 255;
-				float b = column[row][2] / (float) 255;
-
-				if (clustering.isEmpty()) {
-					clustering.put(new Color(r, g, b), 1);
-					continue;
-				}
-
-				Color closest = null;
-				for (Color c : clustering.keySet()) {
-
-					float diffCol = Math.abs(r - (c.getRed() / (float) 255)) + Math.abs(g - (c.getGreen() / (float) 255)) + Math.abs(b - (c.getBlue() / (float) 255));
-
-					if (diffCol <= DIFF) {
-						clustering.put(c, clustering.get(c) + 1);
-						closest = c;
-						break;
-					}
-
-				}
-
-				if (closest == null) clustering.put(new Color(r, g, b), 1);
-
-			}
-		}
-
-		List<Color> backgrounds = new ArrayList<>();
-		Color temp = clustering.keySet().stream().max(Comparator.comparing(clustering::get)).orElseThrow();
-		clustering.remove(temp);
-		backgrounds.add(temp);
-		temp = clustering.keySet().stream().max(Comparator.comparing(clustering::get)).orElseThrow();
-		clustering.remove(temp);
-		backgrounds.add(temp);
-
-		return backgrounds;
-	}
-
 	private static int[][][] loadImageFromFile(String filepath) {
 		BufferedImage image = null;
 		try {
@@ -206,11 +156,6 @@ public class Main {
 			e.printStackTrace();
 			System.exit(1);
 		}
-
-		/*	pixels[x][y][0] -> (x,y) R val
-		 *  pixels[x][y][1] -> (x,y) G val
-		 *  pixels[x][y][2] -> (x,y) B val
-		 */
 
 		int[][][] pixels;
 
