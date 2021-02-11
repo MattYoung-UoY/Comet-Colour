@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,20 +31,20 @@ public class Main {
 
 		Map<String, Integer> bom = new HashMap<>();
 
-		for (int i = 0; i < pixels.length; i++) {
-			for (int j = 0; j < pixels[0].length; j++) {
+		for (int[][] column : pixels) {
+			for (int[] pixel : column) {
 
 				String brickName = "";
 
 				for (Bricks brick : Bricks.values()) {
-					if (brick.getR() == pixels[i][j][0] && brick.getG() == pixels[i][j][1] && brick.getB() == pixels[i][j][2]) {
+					if (brick.getR() == pixel[0] && brick.getG() == pixel[1] && brick.getB() == pixel[2]) {
 						brickName = brick.getName();
 						break;
 					}
 				}
 
 				if (brickName.equals(""))
-					throw new IllegalArgumentException("Pixel (" + i + ", " + j + ") is not in the colour set!");
+					throw new IllegalArgumentException("Pixel (" + Arrays.toString(pixel) + ") is not in the colour set!");
 
 				if (bom.containsKey(brickName))
 					bom.put(brickName, bom.get(brickName) + 1);
@@ -89,8 +90,8 @@ public class Main {
 
 		final int PIXELS_PER_BRICK = pixels.length / dim;
 
-		for (int i = 0; i < dim; i++) {
-			for (int j = 0; j < dim; j++) {
+		for (int i = 0; i < bricks.length; i++) {
+			for (int j = 0; j < bricks[0].length; j++) {
 				float r = 0;
 				float g = 0;
 				float b = 0;
