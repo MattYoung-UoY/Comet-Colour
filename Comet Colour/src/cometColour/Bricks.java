@@ -1,6 +1,8 @@
 package cometColour;
 
-
+/**
+ * Stores the Names and Colour values of the available bricks
+ */
 public enum Bricks {
 
 	A("4619652/3005", 96, 160, 185),
@@ -24,9 +26,21 @@ public enum Bricks {
 	S("300526/3005", 47, 47, 47),
 	T("4286050/3005", 238, 149, 197);
 
+	/**
+	 * Name of the brick
+	 */
 	private final String name;
+	/**
+	 * The rgb values for the brick
+	 */
 	private final int r, g, b;
 
+	/**
+	 * @param name Name of the brick
+	 * @param r R colour value of the brick
+	 * @param g G colour value of the brick
+	 * @param b B colour value of the brick
+	 */
 	Bricks(String name, int r, int g, int b) {
 		this.name = name;
 		this.r = r;
@@ -34,18 +48,30 @@ public enum Bricks {
 		this.b = b;
 	}
 
+	/**
+	 * @return The name of the brick
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * @return The R colour value of the brick
+	 */
 	public int getR() {
 		return r;
 	}
 
+	/**
+	 * @return The G colour value of the brick
+	 */
 	public int getG() {
 		return g;
 	}
 
+	/**
+	 * @return The B colour value of the brick
+	 */
 	public int getB() {
 		return b;
 	}
