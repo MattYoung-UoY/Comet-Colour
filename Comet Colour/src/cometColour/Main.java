@@ -174,7 +174,7 @@ public class Main {
 				}
 
 				assert closest != null; // if Colours.values() is empty, closest is null, then NullPointerException.
-				
+
 				//Sets the brick colour
 				bricks[i][j][0] = closest.getR();
 				bricks[i][j][1] = closest.getG();
